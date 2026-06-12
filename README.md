@@ -272,6 +272,25 @@ docs/task/{task-id}/
 
 DB 是运行态真相，repo 是可接力的工程化投影。
 
+### 9. 改造自己时，控制平面必须稳定
+
+dev-agent-harness 可以 dogfood 自己，但不能让正在派发任务的实例成为被重启的目标。
+
+正确拓扑是：
+
+```text
+stable control plane
+→ 创建 candidate worktree
+→ agent 修改 candidate worktree
+→ 启动 candidate server / daemon / desktop
+→ verify 节点验证 candidate 实例
+→ 通过后再合并并显式重启控制平面
+```
+
+控制平面负责调度和观察；候选 worktree 负责被改、被测、被丢弃。
+
+这不是流程洁癖，是自举系统的安全边界。
+
 ## 运转模型
 
 ```text
@@ -402,6 +421,7 @@ flowchart TD
 - 下游任务通过 source material 拿到真实上游产物
 - summary 节点生成最终交付
 - goal_persist 将任务资料按 harness 结构沉淀回 repo
+- self-dogfooding 时用独立候选 worktree 隔离控制平面
 
 ## 代码入口
 
@@ -413,6 +433,8 @@ flowchart TD
 - `docs/step-project-role-sync/`：工程角色同步经验
 - `docs/step-repo-docs-persistence/`：任务沉淀到仓库经验
 - `docs/step-e2e-testing/`：端到端验证经验
+- `docs/step-self-dogfooding/`：用当前 harness 改造当前工程的隔离流程
+- `scripts/create-dogfood-worktree.sh`：创建候选 worktree 和 `.env.worktree`
 
 ## 一句话
 

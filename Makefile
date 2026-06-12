@@ -1,4 +1,4 @@
-.PHONY: help makehelp dev server daemon cli multica build test migrate-up migrate-down sqlc seed clean setup start stop check worktree-env setup-main start-main stop-main check-main setup-worktree start-worktree stop-worktree check-worktree db-up db-down db-reset selfhost selfhost-build selfhost-stop
+.PHONY: help makehelp dev server daemon cli multica build test migrate-up migrate-down sqlc seed clean setup start stop check worktree-env dogfood-worktree setup-main start-main stop-main check-main setup-worktree start-worktree stop-worktree check-worktree db-up db-down db-reset selfhost selfhost-build selfhost-stop
 
 MAIN_ENV_FILE ?= .env
 WORKTREE_ENV_FILE ?= .env.worktree
@@ -222,6 +222,9 @@ db-reset: ## Drop and recreate the current env's database, then re-run all migra
 
 worktree-env: ## Generate .env.worktree with a unique DB name and app ports for this worktree
 	@bash scripts/init-worktree-env.sh .env.worktree
+
+dogfood-worktree: ## Create an isolated candidate worktree for self-dogfooding; pass TASK=name
+	@TASK="$(TASK)" BASE_REF="$(BASE_REF)" BRANCH="$(BRANCH)" WORKTREE_ROOT="$(WORKTREE_ROOT)" DOGFOOD_WORKTREE_DIR="$(DOGFOOD_WORKTREE_DIR)" bash scripts/create-dogfood-worktree.sh
 
 setup-main: ## Prepare the main checkout using .env
 	@$(MAKE) setup ENV_FILE=$(MAIN_ENV_FILE)

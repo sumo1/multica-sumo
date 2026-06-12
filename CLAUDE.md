@@ -164,6 +164,25 @@ make setup-worktree     # Setup using .env.worktree
 make start-worktree     # Start using .env.worktree
 ```
 
+### Self-dogfooding Safety
+
+When using dev-agent-harness to modify dev-agent-harness itself, never run
+implementation or verification tasks against the checkout that is currently
+dispatching tasks. Keep a stable control plane running from the main checkout,
+then create an isolated candidate target:
+
+```bash
+make dogfood-worktree TASK=prompt-contract
+cd ../dev-agent-harness-prompt-contract-*
+make setup-worktree
+make start-worktree
+```
+
+Attach the candidate worktree path as the project `local_directory` in the
+control plane. Agents may edit, start, stop, and test only the candidate
+worktree. Merging back to `main`, force pushing, or restarting the control
+plane requires explicit user approval. See `docs/step-self-dogfooding/`.
+
 ## Coding Rules
 
 - TypeScript strict mode is enabled; keep types explicit.

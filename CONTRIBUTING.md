@@ -21,6 +21,7 @@
 - **多运行时执行**：让 Claude Code、Codex 等 runtime 成为同一目标里的可选执行资源
 - **端到端验证**：把桌面端、浏览器、daemon、子进程验证做成 agent 可调用动作
 - **repo 知识沉淀**：把目标、施工图、双契约、memory 按 harness 结构写回工程仓库
+- **自举改造安全**：用独立候选 worktree 跑 implement / verify，保护正在调度任务的控制平面
 - **文档整理**：把经验按动作阶段写进 `docs/step-*`，不要堆进宽泛目录
 
 不优先：
@@ -72,6 +73,16 @@ repo 文件读写必须由 agent 在 daemon 所在机器执行。
 - memory
 
 不要做隐式双向同步。repo 沉淀是按需快照。
+
+### 自举改造必须隔离
+
+用 dev-agent-harness 改 dev-agent-harness 自己时，控制平面和目标工程不能是同一个 checkout。
+
+- 控制平面：稳定实例，负责调度、观察、记录，不被普通任务重启。
+- 候选 worktree：agent 可以改代码、启动服务、跑验证、丢弃重来。
+- 合并、push、重启控制平面必须显式授权。
+
+入口见 `docs/step-self-dogfooding/` 和 `make dogfood-worktree TASK=...`。
 
 ### 子任务 prompt 不暴露 DAG
 

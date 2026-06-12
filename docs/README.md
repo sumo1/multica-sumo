@@ -8,6 +8,7 @@
 |---|---|
 | 要准备工程角色、成员池、总控可用资源 | [`step-project-role-sync/`](./step-project-role-sync/) |
 | 要设计或修改多智能体任务编排、DAG、summary、verify、上下游传递 | [`step-multi-agent-orchestration/`](./step-multi-agent-orchestration/) |
+| 要用当前工程的目标模式改造当前工程，并隔离控制平面和候选实例 | [`step-self-dogfooding/`](./step-self-dogfooding/) |
 | 要做桌面端端到端验证，包含启动 server/daemon、Claude Code 子进程、computer-use、运行时排查 | [`step-e2e-testing/`](./step-e2e-testing/) |
 | 要把任务结果沉淀回工程 repo，处理 repo-SSOT、双契约、工程方言 | [`step-repo-docs-persistence/`](./step-repo-docs-persistence/) |
 | 要查某条结论的原始时间线和证据 | [`task/260608-assistant-enhancements/memory/README.md`](./task/260608-assistant-enhancements/memory/README.md) |

@@ -1,7 +1,7 @@
 {
-  "name": "multica",
+  "name": "dev-agent-harness",
   "version": "0.2.0",
-  "description": "The open-source managed agents platform — turn coding agents into real teammates: assign tasks, track progress, compound skills.",
+  "description": "Developer agent harness for role-based, multi-runtime task orchestration, verification, and repo knowledge persistence.",
   "private": true,
   "type": "module",
   "scripts": {

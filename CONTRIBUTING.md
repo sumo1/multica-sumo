@@ -1,6 +1,6 @@
-# Contributing to multica-sumo
+# Contributing to dev-agent-harness
 
-这份文档说明如何给 `multica-sumo` 做贡献。
+这份文档说明如何给 `dev-agent-harness` 做贡献。
 
 先读：
 

@@ -1,0 +1,180 @@
+package daemon
+
+import "encoding/json"
+
+// AgentEntry describes a single available agent CLI.
+type AgentEntry struct {
+	Path  string // path to CLI binary
+	Model string // model override (optional)
+}
+
+// Runtime represents a registered daemon runtime.
+type Runtime struct {
+	ID       string `json:"id"`
+	Name     string `json:"name"`
+	Provider string `json:"provider"`
+	Status   string `json:"status"`
+}
+
+// RepoData holds repository information from the workspace.
+type RepoData struct {
+	URL         string `json:"url"`
+	Description string `json:"description,omitempty"`
+}
+
+// ProjectResourceData mirrors handler.ProjectResourceData — a single project
+// resource as delivered to the daemon. resource_ref is type-specific JSON.
+type ProjectResourceData struct {
+	ID           string          `json:"id"`
+	ResourceType string          `json:"resource_type"`
+	ResourceRef  json.RawMessage `json:"resource_ref"`
+	Label        string          `json:"label,omitempty"`
+}
+
+// Task represents a claimed task from the server.
+// Agent data (name, skills) is populated by the claim endpoint.
+type Task struct {
+	ID          string `json:"id"`
+	AgentID     string `json:"agent_id"`
+	RuntimeID   string `json:"runtime_id"`
+	IssueID     string `json:"issue_id"`
+	WorkspaceID string `json:"workspace_id"`
+	// WorkspaceContext mirrors workspace.context (the per-workspace system
+	// prompt set in Settings → General). Server populates this on every claim
+	// regardless of task kind so the daemon can inject `## Workspace Context`
+	// into the brief. Empty when the owner hasn't set one.
+	WorkspaceContext          string                `json:"workspace_context,omitempty"`
+	Agent                     *AgentData            `json:"agent,omitempty"`
+	Repos                     []RepoData            `json:"repos,omitempty"`
+	ProjectID                 string                `json:"project_id,omitempty"`                   // issue's project, when present
+	ProjectTitle              string                `json:"project_title,omitempty"`                // human-readable project title for context injection
+	ProjectResources          []ProjectResourceData `json:"project_resources,omitempty"`            // project-scoped resources to expose to the agent
+	PriorSessionID            string                `json:"prior_session_id,omitempty"`             // Claude session ID from a previous task on this issue
+	PriorWorkDir              string                `json:"prior_work_dir,omitempty"`               // work_dir from a previous task on this issue
+	TriggerCommentID          string                `json:"trigger_comment_id,omitempty"`           // comment that triggered this task
+	TriggerCommentContent     string                `json:"trigger_comment_content,omitempty"`      // content of the triggering comment
+	TriggerAuthorType         string                `json:"trigger_author_type,omitempty"`          // "agent" or "member" — author kind for the triggering comment
+	TriggerAuthorName         string                `json:"trigger_author_name,omitempty"`          // display name of the triggering comment author
+	NewCommentCount           int                   `json:"new_comment_count,omitempty"`            // issue-wide comments since this agent's last run (excludes its own and the injected trigger); 0/omitted for old daemons or cold start
+	NewCommentsSince          string                `json:"new_comments_since,omitempty"`           // RFC3339 anchor (last run's started_at) the count is measured from; empty on cold start
+	ChatSessionID             string                `json:"chat_session_id,omitempty"`              // non-empty for chat tasks
+	ChatMessage               string                `json:"chat_message,omitempty"`                 // user message content for chat tasks
+	TakeoverSubtaskTitle      string                `json:"takeover_subtask_title,omitempty"`       // chat is a goal-subtask takeover: subtask title
+	TakeoverSubtaskSpec       string                `json:"takeover_subtask_spec,omitempty"`        // subtask spec the agent was working on
+	TakeoverFailureReason     string                `json:"takeover_failure_reason,omitempty"`      // why the subtask failed, for takeover context
+	GoalDiscussionActive      bool                  `json:"goal_discussion_active,omitempty"`       // chat is a task-mode goal discussion: facilitate clarifying the goal into a confirmable task card
+	GoalDiscussionTitle       string                `json:"goal_discussion_title,omitempty"`        // the goal's working title, if any
+	GoalDiscussionGoal        string                `json:"goal_discussion_goal,omitempty"`         // the goal text agreed so far, if any
+	ChatMessageAttachments    []ChatAttachmentMeta  `json:"chat_message_attachments,omitempty"`     // attachments linked to the chat message; agent uses these to `multica attachment download <id>`
+	AutopilotRunID            string                `json:"autopilot_run_id,omitempty"`             // non-empty for autopilot run_only tasks
+	AutopilotID               string                `json:"autopilot_id,omitempty"`                 // autopilot that spawned this run
+	AutopilotTitle            string                `json:"autopilot_title,omitempty"`              // autopilot title used as task context
+	AutopilotDescription      string                `json:"autopilot_description,omitempty"`        // autopilot description used as task prompt
+	AutopilotSource           string                `json:"autopilot_source,omitempty"`             // manual, schedule, webhook, or api
+	AutopilotTriggerPayload   json.RawMessage       `json:"autopilot_trigger_payload,omitempty"`    // optional trigger payload for webhook/api runs
+	QuickCreatePrompt         string                `json:"quick_create_prompt,omitempty"`          // user's natural-language input for quick-create tasks
+	GoalSubtaskID             string                `json:"goal_subtask_id,omitempty"`              // non-empty for goal-mode subtask execution tasks
+	GoalTitle                 string                `json:"goal_title,omitempty"`                   // headline of the parent goal, for role context
+	GoalSubtaskTitle          string                `json:"goal_subtask_title,omitempty"`           // this subtask's title
+	GoalSubtaskSpec           string                `json:"goal_subtask_spec,omitempty"`            // this subtask's spec — the prompt body for the role
+	GoalSubtaskKind           string                `json:"goal_subtask_kind,omitempty"`            // 'execute' or 'verify'
+	GoalReviewTarget          string                `json:"goal_review_target,omitempty"`           // for verify nodes: the upstream output to adversarially review
+	GoalUpstreamOutput        string                `json:"goal_upstream_output,omitempty"`         // for execute nodes with deps: the OUTPUT of upstream node(s), so it builds on it instead of re-deriving
+	GoalHandoffBrief          string                `json:"goal_handoff_brief,omitempty"`           // frames upstream output as direct runtime input, not a file handoff
+	GoalPlanningRunID         string                `json:"goal_planning_run_id,omitempty"`         // non-empty for goal-planning tasks (PMO decomposes the goal)
+	GoalPlanningGoal          string                `json:"goal_planning_goal,omitempty"`           // the goal text the leader must decompose
+	GoalSummaryRunID          string                `json:"goal_summary_run_id,omitempty"`          // non-empty for goal-summary tasks (PMO writes the final deliverable)
+	GoalSummaryGoal           string                `json:"goal_summary_goal,omitempty"`            // the original goal text, for the summary prompt
+	GoalSummaryOutcome        string                `json:"goal_summary_outcome,omitempty"`         // completed / partial / failed
+	GoalSummaryDigest         string                `json:"goal_summary_digest,omitempty"`          // assembled subtask outputs to synthesize
+	GoalPersistRunID          string                `json:"goal_persist_run_id,omitempty"`          // non-empty for goal-persist tasks (总控 snapshots the task into the project repo)
+	GoalPersistGoal           string                `json:"goal_persist_goal,omitempty"`            // the original goal text, for the persist prompt
+	GoalPersistSlug           string                `json:"goal_persist_slug,omitempty"`            // docs/task/{slug} directory name to write under
+	GoalPersistOutcome        string                `json:"goal_persist_outcome,omitempty"`         // goal_run status snapshot at persist time
+	GoalPersistDigest         string                `json:"goal_persist_digest,omitempty"`          // assembled subtask content to author into harness files
+	GoalDecisionSubtaskID     string                `json:"goal_decision_subtask_id,omitempty"`     // non-empty for goal-decision tasks (总控 judges a failed node's next step)
+	GoalDecisionSubtaskTitle  string                `json:"goal_decision_subtask_title,omitempty"`  // the failed node's title
+	GoalDecisionSubtaskSpec   string                `json:"goal_decision_subtask_spec,omitempty"`   // the failed node's spec
+	GoalDecisionFailureReason string                `json:"goal_decision_failure_reason,omitempty"` // why the node failed
+	GoalDecisionDownstream    string                `json:"goal_decision_downstream,omitempty"`     // dependents blocked behind the failed node
+	SquadID                   string                `json:"squad_id,omitempty"`                     // when the picker was a squad, the squad's UUID; Agent is still the resolved leader
+	SquadName                 string                `json:"squad_name,omitempty"`                   // display name for the picker squad, used in prompt text
+	ParentIssueID             string                `json:"parent_issue_id,omitempty"`              // for quick-create tasks opened from "Add sub issue" — UUID of the parent issue the new issue should be filed under
+	ParentIssueIdentifier     string                `json:"parent_issue_identifier,omitempty"`      // human-readable identifier (e.g. MUL-123) of the quick-create parent issue, used in prompt context
+	// RequestingUserName + RequestingUserProfileDescription describe the human
+	// the agent is working on behalf of. v1 sources them from the runtime
+	// owner (the user who registered the daemon). Empty when the runtime has
+	// no owner (cloud / system runtimes) or the user hasn't set a description.
+	// Injected into the brief under `## Requesting User`; omitted entirely
+	// when description is empty so the agent doesn't see a useless heading.
+	RequestingUserName               string `json:"requesting_user_name,omitempty"`
+	RequestingUserProfileDescription string `json:"requesting_user_profile_description,omitempty"`
+	// AuthToken is the task-scoped credential the server mints at claim time.
+	// The daemon injects it into the spawned agent as MULTICA_TOKEN so the
+	// agent never sees the daemon's own (often workspace-owner) credential.
+	// Empty when the server-side runtime has no owning user — the daemon
+	// then falls back to its own token. See MUL-2600.
+	AuthToken string `json:"auth_token,omitempty"`
+}
+
+// ChatAttachmentMeta is the structured attachment metadata the daemon
+// hands to the agent for chat tasks. We pass id + filename + content_type
+// so the chat prompt can list them explicitly and instruct the agent to
+// run `multica attachment download <id>` instead of guessing from a
+// signed CDN URL (which expires).
+type ChatAttachmentMeta struct {
+	ID          string `json:"id"`
+	Filename    string `json:"filename"`
+	ContentType string `json:"content_type,omitempty"`
+}
+
+// AgentData holds agent details returned by the claim endpoint.
+type AgentData struct {
+	ID            string            `json:"id"`
+	Name          string            `json:"name"`
+	Instructions  string            `json:"instructions"`
+	Skills        []SkillData       `json:"skills"`
+	CustomEnv     map[string]string `json:"custom_env,omitempty"`
+	CustomArgs    []string          `json:"custom_args,omitempty"`
+	McpConfig     json.RawMessage   `json:"mcp_config,omitempty"`
+	Model         string            `json:"model,omitempty"`
+	ThinkingLevel string            `json:"thinking_level,omitempty"`
+}
+
+// SkillData represents a structured skill for task execution.
+type SkillData struct {
+	ID          string          `json:"id"`
+	Name        string          `json:"name"`
+	Description string          `json:"description,omitempty"`
+	Content     string          `json:"content"`
+	Files       []SkillFileData `json:"files,omitempty"`
+}
+
+// SkillFileData represents a supporting file within a skill.
+type SkillFileData struct {
+	Path    string `json:"path"`
+	Content string `json:"content"`
+}
+
+// TaskUsageEntry represents token usage for a single model during a task execution.
+type TaskUsageEntry struct {
+	Provider         string `json:"provider"`
+	Model            string `json:"model"`
+	InputTokens      int64  `json:"input_tokens"`
+	OutputTokens     int64  `json:"output_tokens"`
+	CacheReadTokens  int64  `json:"cache_read_tokens"`
+	CacheWriteTokens int64  `json:"cache_write_tokens"`
+}
+
+// TaskResult is the outcome of executing a task.
+type TaskResult struct {
+	Status        string           `json:"status"`
+	Comment       string           `json:"comment"`
+	BranchName    string           `json:"branch_name,omitempty"`
+	EnvType       string           `json:"env_type,omitempty"`
+	SessionID     string           `json:"session_id,omitempty"` // Claude session ID for future resumption
+	WorkDir       string           `json:"work_dir,omitempty"`   // working directory used during execution
+	EnvRoot       string           `json:"-"`                    // env root dir for writing GC metadata (not sent to server)
+	FailureReason string           `json:"-"`                    // classifier forwarded to FailTask on the blocked path; empty falls back to 'agent_error'
+	Usage         []TaskUsageEntry `json:"usage,omitempty"`      // per-model token usage
+}

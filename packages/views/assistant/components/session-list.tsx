@@ -1,0 +1,81 @@
+"use client";
+
+import { Plus } from "lucide-react";
+import { Button } from "@multica/ui/components/ui/button";
+import type { Agent, ChatSession, RuntimeDevice } from "@multica/core/types";
+import { SessionListItem } from "./session-list-item";
+import { useT } from "../../i18n";
+
+interface SessionListProps {
+  sessions: ChatSession[];
+  agents: Agent[];
+  runtimes: RuntimeDevice[];
+  activeSessionId: string | null;
+  onSelectSession: (sessionId: string) => void;
+  onNewSession: () => void;
+}
+
+export function SessionList({
+  sessions,
+  agents,
+  runtimes,
+  activeSessionId,
+  onSelectSession,
+  onNewSession,
+}: SessionListProps) {
+  const { t } = useT("chat");
+
+  // 按更新时间倒序排列
+  const sortedSessions = [...sessions].sort(
+    (a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
+  );
+
+  // 创建 agent ID 到 agent 的映射
+  const agentById = new Map(agents.map((a) => [a.id, a]));
+  // runtime ID → runtime，会话项用它显示绑定的运行时（Claude Code / Codex …）
+  const runtimeById = new Map(runtimes.map((r) => [r.id, r]));
+
+  return (
+    <div className="w-80 flex flex-col border-r bg-muted/20">
+      {/* 头部 */}
+      <div className="flex items-center justify-between px-4 py-3 border-b">
+        <h2 className="text-sm font-semibold">{t(($) => $.session_list.title)}</h2>
+        <Button
+          variant="ghost"
+          size="icon-sm"
+          className="rounded-full"
+          onClick={onNewSession}
+        >
+          <Plus className="size-4" />
+        </Button>
+      </div>
+
+      {/* 会话列表 */}
+      <div className="flex-1 overflow-y-auto p-2 space-y-1">
+        {sortedSessions.length === 0 ? (
+          <div className="flex flex-col items-center justify-center h-full text-center px-4">
+            <p className="text-sm text-muted-foreground">{t(($) => $.session_list.empty_title)}</p>
+            <p className="text-xs text-muted-foreground mt-1">{t(($) => $.session_list.empty_hint)}</p>
+          </div>
+        ) : (
+          sortedSessions.map((session) => {
+            const agent = agentById.get(session.agent_id);
+            const runtime = session.runtime_id
+              ? runtimeById.get(session.runtime_id)
+              : undefined;
+            return (
+              <SessionListItem
+                key={session.id}
+                session={session}
+                agent={agent}
+                runtime={runtime}
+                isActive={session.id === activeSessionId}
+                onClick={() => onSelectSession(session.id)}
+              />
+            );
+          })
+        )}
+      </div>
+    </div>
+  );
+}

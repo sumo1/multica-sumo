@@ -1,0 +1,233 @@
+{
+  "fab": {
+    "running": "Multica is working...",
+    "unread_one": "{{count}} unread chat",
+    "unread_other": "{{count}} unread chats",
+    "default": "Ask Multica"
+  },
+  "input": {
+    "placeholder_no_agent": "Create an agent to start chatting",
+    "placeholder_archived": "This session is archived",
+    "placeholder_named": "Tell {{name}} what to do…",
+    "placeholder_default": "Tell me what to do…",
+    "send_tooltip": "Send",
+    "stop_tooltip": "Stop"
+  },
+  "message_list": {
+    "show_details": "Show details",
+    "replied_in": "Replied in {{elapsed}}",
+    "failed_after": "Failed after {{elapsed}}",
+    "task_failed_fallback": "Task failed",
+    "tools_one": "{{count}} tool",
+    "tools_other": "{{count}} tools",
+    "tool_result_named": "{{tool}} result: ",
+    "tool_result_unnamed": "result: ",
+    "process_steps_one": "{{count}} step",
+    "process_steps_other": "{{count}} steps",
+    "copy_action": "Copy",
+    "copied_toast": "Copied",
+    "copy_failed_toast": "Copy failed"
+  },
+  "session_history": {
+    "untitled": "Untitled",
+    "time": {
+      "just_now": "just now",
+      "minutes": "{{count}}m ago",
+      "hours": "{{count}}h ago",
+      "days": "{{count}}d ago"
+    },
+    "row_delete_aria": "Delete chat session",
+    "row_rename_aria": "Rename chat session",
+    "row_stop_aria": "Stop current run",
+    "stop_action": "Stop",
+    "row_subtitle": {
+      "working": "Working",
+      "completed": "Completed",
+      "new_reply": "New reply"
+    },
+    "stop_dialog": {
+      "title": "Stop this run?",
+      "description_with_title": "This will cancel the current agent task in \"{{title}}\". Partial output will stay in the chat.",
+      "description_default": "This will cancel the current agent task. Partial output will stay in the chat.",
+      "cancel": "Keep running",
+      "confirm": "Stop run",
+      "confirming": "Stopping..."
+    },
+    "delete_dialog": {
+      "title": "Delete chat session",
+      "description_with_title": "\"{{title}}\" and its messages will be permanently removed. This action cannot be undone.",
+      "description_default": "This chat session and its messages will be permanently removed. This action cannot be undone.",
+      "cancel": "Cancel",
+      "confirm": "Delete",
+      "confirming": "Deleting..."
+    }
+  },
+  "window": {
+    "new_chat_tooltip": "New chat",
+    "restore_tooltip": "Restore",
+    "expand_tooltip": "Expand",
+    "minimize_tooltip": "Minimize",
+    "another_running": "Another chat is running",
+    "another_unread": "Another chat has unread replies",
+    "running": "Running",
+    "unread": "Unread",
+    "no_previous": "No previous chats",
+    "untitled": "New chat",
+    "my_agents": "My agents",
+    "others": "Others",
+    "no_agents": "No agents",
+    "history_group": "Chat history"
+  },
+  "empty_state": {
+    "first_time_title": "Chat with your agents",
+    "first_time_intro": "✨ They know your workspace —",
+    "first_time_pillars": "issues, projects, skills",
+    "first_time_pillars_suffix": ".",
+    "first_time_actions": "Ask for a summary, plan your day, or hand off a quick task.",
+    "returning_title_named": "Hi, I'm {{name}}",
+    "returning_title_default": "Welcome to Multica",
+    "returning_subtitle": "Try asking"
+  },
+  "starter_prompts": {
+    "list_open": "List my open tasks by priority",
+    "summarize_today": "Summarize what I did today",
+    "plan_next": "Plan what to work on next"
+  },
+  "context_anchor": {
+    "tooltip_disabled": "Nothing to share with Multica on this page",
+    "tooltip_off": "Let Multica know what you're viewing",
+    "tooltip_on_issue": "Multica knows you're viewing {{label}} · Click to turn off",
+    "tooltip_on_project": "Multica knows you're viewing project \"{{label}}\" · Click to turn off",
+    "card_tooltip_issue_with_subtitle": "Multica knows you're viewing {{label}} — {{subtitle}}",
+    "card_tooltip_issue": "Multica knows you're viewing {{label}}",
+    "card_tooltip_project": "Multica knows you're viewing project \"{{label}}\"",
+    "aria_stop": "Stop sharing current page",
+    "aria_start": "Share current page with Multica"
+  },
+  "goal": {
+    "untitled": "Untitled goal",
+    "untitled_subtask": "Untitled subtask",
+    "unassigned": "Unassigned",
+    "coordinator_label": "Coordinator",
+    "progress_steps": "{{done}}/{{total}} steps",
+    "progress_none": "Not decomposed yet",
+    "has_failure": "· has failures/blocks",
+    "depends_unmet": "· dependency unmet",
+    "retried": "(retried {{attempt}}/{{max}})",
+    "decomposition": "Task breakdown",
+    "discussion_placeholder": "In discussion, no subtasks yet",
+    "verify_node": "Adversarial review",
+    "verdict_pass": "pass",
+    "verdict_reject": "reject",
+    "intervene": {
+      "retry": "Retry",
+      "reassign": "Reassign",
+      "edit_spec": "Edit spec",
+      "skip": "Skip",
+      "takeover": "Take over",
+      "edit_spec_placeholder": "Edit the spec, then retry…",
+      "edit_spec_save": "Save & retry",
+      "edit_spec_cancel": "Cancel",
+      "reassign_placeholder": "Reassign to…",
+      "working": "Working…"
+    },
+    "status": {
+      "pending": "Pending",
+      "ready": "Ready",
+      "running": "Running",
+      "completed": "Done",
+      "failed": "Failed",
+      "blocked": "Blocked",
+      "skipped": "Skipped"
+    },
+    "panel": {
+      "title": "Goal mode",
+      "squad_label": "Team",
+      "squad_placeholder": "Pick a team",
+      "no_squads": "No teams yet — create one in Squads first.",
+      "goal_label": "Goal",
+      "goal_placeholder": "Describe the goal for the team to plan and execute…",
+      "submit": "Start goal",
+      "planning": "The coordinator is planning…",
+      "submit_error": "Could not start the goal. Try again.",
+      "empty": "Pick a team and describe a goal to get started."
+    }
+  },
+  "task_page": {
+    "title": "Tasks",
+    "new_task": "New task",
+    "confirm_execute": "Confirm & execute",
+    "status_tree": "Task breakdown",
+    "main_session": "Coordinator",
+    "sub_session": "Subtask output",
+    "handoff_brief": "Handoff brief",
+    "upstream_input": "Upstream input",
+    "empty_list": "No tasks yet. Start one to plan and run work with a team.",
+    "empty_detail": "Create a task or pick one from the list.",
+    "planning_hint": "The coordinator is planning the task…",
+    "back_to_main": "Back to main session",
+    "final_summary": "Final deliverable (coordinator summary)",
+    "summarizing": "The coordinator is writing the final summary…",
+    "persist": "Persist to repo",
+    "persisted": "Re-persist to repo",
+    "persisting": "Persisting…",
+    "persist_hint": "Snapshot this task into the project repo (docs/task), following the harness structure.",
+    "persist_disabled_hint": "Bind a project with a local repo to persist this task.",
+    "members": "Members",
+    "sync_from_project": "Sync roles from a project",
+    "pick_project": "Pick a project…",
+    "sync": "Sync",
+    "sync_result": "{{created}} created · {{updated}} updated",
+    "add_members": "Add to this task",
+    "no_roles": "No roles yet — sync a project or create one.",
+    "run_status": {
+      "discussion": "Discussion",
+      "confirmed": "Confirmed",
+      "planning": "Planning",
+      "executing": "Executing",
+      "completed": "Completed",
+      "partial": "Partly done",
+      "failed": "Failed",
+      "cancelled": "Cancelled"
+    }
+  },
+  "session_list": {
+    "title": "Sessions",
+    "empty_title": "No sessions yet",
+    "empty_hint": "Click + in the top-right to create one"
+  },
+  "new_dialog": {
+    "title": "New chat",
+    "description": "Pick an agent and runtime to start chatting",
+    "agent_label": "Agent",
+    "no_agents": "No agents available",
+    "cancel": "Cancel",
+    "creating": "Creating…",
+    "create": "Start chat"
+  },
+  "no_agent_banner": "You need an agent to start chatting.",
+  "offline_banner": {
+    "fallback_name": "the agent",
+    "unstable": "{{name}}'s connection is unstable — replies may be delayed.",
+    "offline": "{{name}} is offline — your message will be delivered when they're back."
+  },
+  "status_pill": {
+    "stages": {
+      "offline": "Offline",
+      "reconnecting": "Reconnecting",
+      "queued": "Queued",
+      "waiting_local_directory": "Waiting for local directory",
+      "starting_up": "Starting up",
+      "thinking": "Thinking",
+      "typing": "Typing"
+    },
+    "tools": {
+      "running_command": "Running a command",
+      "reading_files": "Reading files",
+      "searching_code": "Searching the code",
+      "making_edits": "Making edits",
+      "searching_web": "Searching the web",
+      "fallback": "Working"
+    }
+  }
+}

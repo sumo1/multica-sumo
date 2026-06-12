@@ -1,0 +1,2 @@
+ALTER TABLE goal_subtask DROP COLUMN IF EXISTS verdict;
+ALTER TABLE goal_subtask DROP COLUMN IF EXISTS kind;

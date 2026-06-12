@@ -1,0 +1,230 @@
+{
+  "fab": {
+    "running": "Multica 正在工作...",
+    "unread_other": "{{count}} 条未读对话",
+    "default": "问 Multica"
+  },
+  "input": {
+    "placeholder_no_agent": "创建一个智能体后才能开始对话",
+    "placeholder_archived": "此会话已归档",
+    "placeholder_named": "告诉 {{name}} 该做什么...",
+    "placeholder_default": "告诉我该做什么...",
+    "send_tooltip": "发送",
+    "stop_tooltip": "停止"
+  },
+  "message_list": {
+    "show_details": "查看详情",
+    "replied_in": "{{elapsed}} 内回复",
+    "failed_after": "{{elapsed}} 后失败",
+    "task_failed_fallback": "task 失败",
+    "tools_other": "{{count}} 个工具",
+    "tool_result_named": "{{tool}} 结果：",
+    "tool_result_unnamed": "结果：",
+    "process_steps_other": "{{count}} 步",
+    "copy_action": "复制",
+    "copied_toast": "已复制",
+    "copy_failed_toast": "复制失败"
+  },
+  "session_history": {
+    "untitled": "无标题",
+    "time": {
+      "just_now": "刚刚",
+      "minutes": "{{count}} 分钟前",
+      "hours": "{{count}} 小时前",
+      "days": "{{count}} 天前"
+    },
+    "row_delete_aria": "删除对话",
+    "row_rename_aria": "重命名对话",
+    "row_stop_aria": "停止当前运行",
+    "stop_action": "停止",
+    "row_subtitle": {
+      "working": "运行中",
+      "completed": "已完成",
+      "new_reply": "新回复"
+    },
+    "stop_dialog": {
+      "title": "停止这次运行？",
+      "description_with_title": "这会取消 \"{{title}}\" 里的当前智能体任务。已产生的内容会保留在对话里。",
+      "description_default": "这会取消当前智能体任务。已产生的内容会保留在对话里。",
+      "cancel": "继续运行",
+      "confirm": "停止运行",
+      "confirming": "停止中..."
+    },
+    "delete_dialog": {
+      "title": "删除对话",
+      "description_with_title": "\"{{title}}\" 及其消息会被永久删除，无法撤销。",
+      "description_default": "此对话及其消息会被永久删除，无法撤销。",
+      "cancel": "取消",
+      "confirm": "删除",
+      "confirming": "删除中..."
+    }
+  },
+  "window": {
+    "new_chat_tooltip": "新对话",
+    "restore_tooltip": "还原",
+    "expand_tooltip": "展开",
+    "minimize_tooltip": "最小化",
+    "another_running": "另一个对话正在运行",
+    "another_unread": "另一个对话有未读回复",
+    "running": "运行中",
+    "unread": "未读",
+    "no_previous": "暂无历史对话",
+    "untitled": "新对话",
+    "my_agents": "我的智能体",
+    "others": "其他",
+    "no_agents": "暂无智能体",
+    "history_group": "历史对话"
+  },
+  "empty_state": {
+    "first_time_title": "和你的智能体对话",
+    "first_time_intro": "✨ 它们了解你的工作区——",
+    "first_time_pillars": "issue、项目、skill",
+    "first_time_pillars_suffix": "。",
+    "first_time_actions": "让它做一份总结、规划你的一天，或交给它一个小任务。",
+    "returning_title_named": "你好，我是 {{name}}",
+    "returning_title_default": "欢迎使用 Multica",
+    "returning_subtitle": "试试问"
+  },
+  "starter_prompts": {
+    "list_open": "按优先级列出我未完成的任务",
+    "summarize_today": "总结一下我今天做了什么",
+    "plan_next": "规划接下来该做什么"
+  },
+  "context_anchor": {
+    "tooltip_disabled": "当前页面没有可以共享给 Multica 的内容",
+    "tooltip_off": "让 Multica 知道你正在看的内容",
+    "tooltip_on_issue": "Multica 知道你正在看 {{label}}，点击关闭",
+    "tooltip_on_project": "Multica 知道你正在看项目 \"{{label}}\"，点击关闭",
+    "card_tooltip_issue_with_subtitle": "Multica 知道你正在看 {{label}} —— {{subtitle}}",
+    "card_tooltip_issue": "Multica 知道你正在看 {{label}}",
+    "card_tooltip_project": "Multica 知道你正在看项目 \"{{label}}\"",
+    "aria_stop": "停止共享当前页面",
+    "aria_start": "把当前页面共享给 Multica"
+  },
+  "goal": {
+    "untitled": "未命名目标",
+    "untitled_subtask": "未命名子任务",
+    "unassigned": "未指派",
+    "coordinator_label": "总控",
+    "progress_steps": "{{done}}/{{total}} 步",
+    "progress_none": "尚未拆解",
+    "has_failure": "· 含失败/阻塞",
+    "depends_unmet": "· 依赖未完成",
+    "retried": "(已重试 {{attempt}}/{{max}})",
+    "decomposition": "任务拆解",
+    "discussion_placeholder": "讨论中，尚未生成子任务",
+    "verify_node": "对抗审查",
+    "verdict_pass": "通过",
+    "verdict_reject": "打回",
+    "intervene": {
+      "retry": "重试",
+      "reassign": "改派",
+      "edit_spec": "编辑 spec",
+      "skip": "跳过",
+      "takeover": "接管",
+      "edit_spec_placeholder": "修改 spec 后重试…",
+      "edit_spec_save": "保存并重试",
+      "edit_spec_cancel": "取消",
+      "reassign_placeholder": "改派给…",
+      "working": "处理中…"
+    },
+    "status": {
+      "pending": "待办",
+      "ready": "就绪",
+      "running": "运行中",
+      "completed": "完成",
+      "failed": "失败",
+      "blocked": "阻塞",
+      "skipped": "跳过"
+    },
+    "panel": {
+      "title": "目标模式",
+      "squad_label": "团队",
+      "squad_placeholder": "选择一个团队",
+      "no_squads": "还没有团队 —— 请先在小队中创建。",
+      "goal_label": "目标",
+      "goal_placeholder": "描述要交给团队规划并执行的目标…",
+      "submit": "发起目标",
+      "planning": "总控正在规划…",
+      "submit_error": "目标发起失败，请重试。",
+      "empty": "选择一个团队并描述目标即可开始。"
+    }
+  },
+  "task_page": {
+    "title": "任务",
+    "new_task": "新建任务",
+    "confirm_execute": "确认执行",
+    "status_tree": "任务拆解",
+    "main_session": "总控",
+    "sub_session": "子任务输出",
+    "handoff_brief": "交接摘要",
+    "upstream_input": "上游输入",
+    "empty_list": "还没有任务。发起一个，和团队一起规划并执行。",
+    "empty_detail": "新建一个任务，或从左侧列表选一个。",
+    "planning_hint": "总控正在规划任务…",
+    "back_to_main": "返回主会话",
+    "final_summary": "最终交付（总控汇总）",
+    "summarizing": "总控正在撰写最终总结…",
+    "persist": "持久化到工程",
+    "persisted": "重新持久化",
+    "persisting": "持久化中…",
+    "persist_hint": "按 harness 结构把本任务快照写入工程仓库（docs/task）。",
+    "persist_disabled_hint": "绑定一个带本地仓库的工程后即可持久化。",
+    "members": "成员",
+    "sync_from_project": "从工程同步角色",
+    "pick_project": "选择一个工程…",
+    "sync": "同步",
+    "sync_result": "新建 {{created}} · 更新 {{updated}}",
+    "add_members": "加入本次任务",
+    "no_roles": "还没有角色 —— 同步一个工程或新建一个。",
+    "run_status": {
+      "discussion": "讨论中",
+      "confirmed": "已确认",
+      "planning": "规划中",
+      "executing": "执行中",
+      "completed": "已完成",
+      "partial": "部分完成",
+      "failed": "失败",
+      "cancelled": "已取消"
+    }
+  },
+  "session_list": {
+    "title": "会话列表",
+    "empty_title": "暂无会话",
+    "empty_hint": "点击右上角 + 创建新会话"
+  },
+  "new_dialog": {
+    "title": "新建对话",
+    "description": "选择一个智能体和运行时来开始对话",
+    "agent_label": "智能体",
+    "no_agents": "暂无可用的智能体",
+    "cancel": "取消",
+    "creating": "创建中…",
+    "create": "开始对话"
+  },
+  "no_agent_banner": "需要先有一个智能体才能开始对话。",
+  "offline_banner": {
+    "fallback_name": "智能体",
+    "unstable": "{{name}} 的连接不稳定——回复可能延迟。",
+    "offline": "{{name}} 离线——你的消息将在它上线后发送。"
+  },
+  "status_pill": {
+    "stages": {
+      "offline": "离线",
+      "reconnecting": "重连中",
+      "queued": "排队中",
+      "waiting_local_directory": "等待本地目录释放",
+      "starting_up": "启动中",
+      "thinking": "思考中",
+      "typing": "输入中"
+    },
+    "tools": {
+      "running_command": "执行命令",
+      "reading_files": "读取文件",
+      "searching_code": "搜索代码",
+      "making_edits": "修改文件",
+      "searching_web": "搜索网页",
+      "fallback": "处理中"
+    }
+  }
+}

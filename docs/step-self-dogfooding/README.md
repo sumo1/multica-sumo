@@ -41,6 +41,14 @@ stable control plane        candidate target workspace
    make dogfood-worktree TASK=prompt-contract
    ```
 
+   如果任务已经有需求目录，优先让命令指向 `docs/task`：
+
+   ```bash
+   make dogfood-worktree TASK_DOC=docs/task/260608-assistant-enhancements
+   ```
+
+   `docs/task/{task-id}` 是需求和任务资料入口；脚本会用目录名生成 branch / worktree slug，并在输出里提醒后续 goal 读取这个目录。
+
    这会创建一个 sibling worktree，分配独立 branch，并生成 `.env.worktree`。
 
 3. 在候选 worktree 里启动候选实例。
@@ -80,6 +88,10 @@ stable control plane        candidate target workspace
 Skill 选择：
 - 开始前运行 `make agent-skills`。
 - 如果任务匹配 `dev-agent-harness-self-dogfooding`，先读对应 `SKILL.md`，再执行脚本。
+
+需求来源：
+- 如果本任务来自 `docs/task/{task-id}`，创建候选 worktree 时使用 `make dogfood-worktree TASK_DOC=docs/task/{task-id}`。
+- 进入 goal 后，先读取候选 worktree 中的这个任务目录，把它作为 source requirement。
 
 边界：
 - 只能修改 project local_directory 指向的候选 worktree。

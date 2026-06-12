@@ -47,6 +47,16 @@ that edit through the harness.
    make dogfood-worktree TASK=<short-task-slug>
    ```
 
+   If the work starts from an existing requirement directory under `docs/task`,
+   prefer:
+
+   ```bash
+   make dogfood-worktree TASK_DOC=docs/task/<task-id>
+   ```
+
+   This derives the branch/worktree slug from the requirement directory and
+   prints the doc path for the goal prompt.
+
    The command prints the candidate path, branch, generated DB name, and ports.
 
 3. Move into the candidate worktree.
@@ -76,6 +86,7 @@ that edit through the harness.
 
 ```bash
 make dogfood-worktree TASK=<slug>   # run in stable control checkout
+make dogfood-worktree TASK_DOC=docs/task/<task-id>
 make setup-worktree                 # run in candidate worktree
 make start-worktree                 # run in candidate worktree
 make stop-worktree                  # run in candidate worktree

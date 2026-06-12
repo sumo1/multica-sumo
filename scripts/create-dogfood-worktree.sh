@@ -1,12 +1,42 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+repo_root="$(git rev-parse --show-toplevel)"
 task_name="${TASK:-${1:-}}"
+task_doc="${TASK_DOC:-}"
+
+if [ -n "$task_doc" ]; then
+  case "$task_doc" in
+    /*)
+      task_doc_abs="$task_doc"
+      task_doc_rel="${task_doc_abs#"$repo_root"/}"
+      ;;
+    *)
+      task_doc_rel="${task_doc#./}"
+      task_doc_abs="${repo_root}/${task_doc_rel}"
+      ;;
+  esac
+
+  case "$task_doc_rel" in
+    docs/task/*) ;;
+    *) echo "TASK_DOC must point under docs/task/, got: ${task_doc}"; exit 1 ;;
+  esac
+
+  if [ ! -d "$task_doc_abs" ]; then
+    echo "TASK_DOC directory does not exist: ${task_doc_abs}"
+    exit 1
+  fi
+
+  task_doc="$task_doc_rel"
+  if [ -z "$task_name" ]; then
+    task_name="$(basename "$task_doc")"
+  fi
+fi
+
 if [ -z "$task_name" ]; then
   task_name="self-dogfood"
 fi
 
-repo_root="$(git rev-parse --show-toplevel)"
 base_ref="${BASE_REF:-HEAD}"
 timestamp="$(date '+%Y%m%d-%H%M%S')"
 
@@ -40,6 +70,9 @@ echo "    control:   ${repo_root}"
 echo "    target:    ${target_dir}"
 echo "    branch:    ${branch}"
 echo "    base ref:  ${base_ref}"
+if [ -n "$task_doc" ]; then
+  echo "    task doc:  ${task_doc}"
+fi
 
 git -C "$repo_root" worktree add -b "$branch" "$target_dir" "$base_ref"
 
@@ -64,3 +97,15 @@ Then attach this path as the project local_directory in the stable control plane
 
 Do not attach or restart the control checkout while it is dispatching this work.
 EOF
+
+if [ -n "$task_doc" ]; then
+  cat <<EOF
+
+This candidate was created for requirement docs:
+
+  ${task_doc}
+
+When creating the goal, tell the planner to read that directory inside the
+candidate worktree and treat it as the source requirement.
+EOF
+fi

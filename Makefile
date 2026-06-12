@@ -223,8 +223,8 @@ db-reset: ## Drop and recreate the current env's database, then re-run all migra
 worktree-env: ## Generate .env.worktree with a unique DB name and app ports for this worktree
 	@bash scripts/init-worktree-env.sh .env.worktree
 
-dogfood-worktree: ## Create an isolated candidate worktree for self-dogfooding; pass TASK=name
-	@TASK="$(TASK)" BASE_REF="$(BASE_REF)" BRANCH="$(BRANCH)" WORKTREE_ROOT="$(WORKTREE_ROOT)" DOGFOOD_WORKTREE_DIR="$(DOGFOOD_WORKTREE_DIR)" bash scripts/create-dogfood-worktree.sh
+dogfood-worktree: ## Create an isolated candidate worktree; pass TASK=name or TASK_DOC=docs/task/id
+	@TASK="$(TASK)" TASK_DOC="$(TASK_DOC)" BASE_REF="$(BASE_REF)" BRANCH="$(BRANCH)" WORKTREE_ROOT="$(WORKTREE_ROOT)" DOGFOOD_WORKTREE_DIR="$(DOGFOOD_WORKTREE_DIR)" bash scripts/create-dogfood-worktree.sh
 
 agent-skills: ## Print repo-local Skill names, descriptions, and files for task-start selection
 	@for file in .agents/skills/*/SKILL.md; do \

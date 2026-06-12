@@ -1,4 +1,4 @@
-.PHONY: help makehelp dev server daemon cli multica build test migrate-up migrate-down sqlc seed clean setup start stop check worktree-env dogfood-worktree agent-skills setup-main start-main stop-main check-main setup-worktree start-worktree stop-worktree check-worktree db-up db-down db-reset selfhost selfhost-build selfhost-stop
+.PHONY: help makehelp dev server daemon cli multica build test migrate-up migrate-down sqlc seed clean setup start stop check worktree-env dogfood-worktree agent-skills setup-main start-main stop-main check-main setup-worktree start-worktree start-desktop start-desktop-worktree stop-worktree check-worktree db-up db-down db-reset selfhost selfhost-build selfhost-stop
 
 MAIN_ENV_FILE ?= .env
 WORKTREE_ENV_FILE ?= .env.worktree
@@ -19,6 +19,11 @@ MULTICA_APP_URL ?= $(FRONTEND_ORIGIN)
 DATABASE_URL ?= postgres://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@localhost:$(POSTGRES_PORT)/$(POSTGRES_DB)?sslmode=disable
 NEXT_PUBLIC_API_URL ?= http://localhost:$(PORT)
 NEXT_PUBLIC_WS_URL ?= ws://localhost:$(PORT)/ws
+VITE_API_URL ?= $(NEXT_PUBLIC_API_URL)
+VITE_WS_URL ?= $(NEXT_PUBLIC_WS_URL)
+VITE_APP_URL ?= $(FRONTEND_ORIGIN)
+DESKTOP_APP_SUFFIX ?=
+DESKTOP_RENDERER_PORT ?= 5173
 GOOGLE_REDIRECT_URI ?= $(FRONTEND_ORIGIN)/auth/callback
 MULTICA_SERVER_URL ?= ws://localhost:$(PORT)/ws
 LOCAL_UPLOAD_BASE_URL ?= http://localhost:$(PORT)
@@ -257,6 +262,22 @@ setup-worktree: ## Ensure .env.worktree exists, then prepare this worktree
 
 start-worktree: ## Start this worktree using .env.worktree
 	@$(MAKE) start ENV_FILE=$(WORKTREE_ENV_FILE)
+
+start-desktop: ## Start Electron desktop for the current checkout env
+	$(REQUIRE_ENV)
+	@echo "Using env file: $(ENV_FILE)"
+	@echo "Desktop app suffix: $(if $(DESKTOP_APP_SUFFIX),$(DESKTOP_APP_SUFFIX),(default))"
+	@echo "Desktop renderer: http://localhost:$(DESKTOP_RENDERER_PORT)"
+	@echo "Desktop API: $(VITE_API_URL)"
+	DESKTOP_APP_SUFFIX="$(DESKTOP_APP_SUFFIX)" \
+	DESKTOP_RENDERER_PORT="$(DESKTOP_RENDERER_PORT)" \
+	VITE_API_URL="$(VITE_API_URL)" \
+	VITE_WS_URL="$(VITE_WS_URL)" \
+	VITE_APP_URL="$(VITE_APP_URL)" \
+	pnpm --filter @multica/desktop dev
+
+start-desktop-worktree: ## Start isolated Electron desktop for this worktree using .env.worktree
+	@$(MAKE) start-desktop ENV_FILE=$(WORKTREE_ENV_FILE)
 
 stop-worktree: ## Stop this worktree's backend and frontend processes
 	@$(MAKE) stop ENV_FILE=$(WORKTREE_ENV_FILE)

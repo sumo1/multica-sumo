@@ -21,7 +21,9 @@ postgres_db="multica_${slug}_${offset}"
 postgres_port=5432
 backend_port=$((18080 + offset))
 frontend_port=$((13000 + offset))
+desktop_renderer_port=$((14000 + offset))
 frontend_origin="http://localhost:${frontend_port}"
+desktop_daemon_profile="desktop-localhost-${backend_port}"
 
 cat > "$ENV_FILE" <<EOF
 POSTGRES_DB=${postgres_db}
@@ -44,6 +46,13 @@ FRONTEND_PORT=${frontend_port}
 FRONTEND_ORIGIN=${frontend_origin}
 NEXT_PUBLIC_API_URL=http://localhost:${backend_port}
 NEXT_PUBLIC_WS_URL=ws://localhost:${backend_port}/ws
+
+VITE_API_URL=http://localhost:${backend_port}
+VITE_WS_URL=ws://localhost:${backend_port}/ws
+VITE_APP_URL=${frontend_origin}
+DESKTOP_APP_SUFFIX=${slug}
+DESKTOP_RENDERER_PORT=${desktop_renderer_port}
+DESKTOP_DAEMON_PROFILE=${desktop_daemon_profile}
 EOF
 
 echo "Generated $ENV_FILE for worktree '$worktree_name'"
@@ -51,7 +60,10 @@ echo "  Shared Postgres: localhost:${postgres_port}"
 echo "  Database: ${postgres_db}"
 echo "  Backend:  http://localhost:${backend_port}"
 echo "  Frontend: ${frontend_origin}"
+echo "  Desktop:  Multica Canary ${slug} (renderer :${desktop_renderer_port})"
+echo "  Daemon profile: ${desktop_daemon_profile}"
 echo ""
 echo "Next steps:"
 echo "  make setup-worktree"
 echo "  make start-worktree"
+echo "  make start-desktop-worktree"

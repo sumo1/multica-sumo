@@ -49,17 +49,26 @@ stable control plane        candidate target workspace
 
    `docs/task/{task-id}` 是需求和任务资料入口；脚本会用目录名生成 branch / worktree slug，并在输出里提醒后续 goal 读取这个目录。
 
-   这会创建一个 sibling worktree，分配独立 branch，并生成 `.env.worktree`。
+   这会在 `.dogfood-worktrees/{task}-{timestamp}` 下创建候选 worktree，分配独立 branch，并生成 `.env.worktree`。
 
 3. 在候选 worktree 里启动候选实例。
 
    ```bash
-   cd ../dev-agent-harness-prompt-contract-*
-   make setup-worktree
-   make start-worktree
+   make -C .dogfood-worktrees/prompt-contract-* setup-worktree
+   make -C .dogfood-worktrees/prompt-contract-* start-worktree
    ```
 
    `make start-worktree` 只使用候选 worktree 的 `.env.worktree`。
+   它是长进程，放在候选任务自己的终端/session 中运行。
+
+   如果要做桌面端 E2E，另开一个候选桌面端：
+
+   ```bash
+   make -C .dogfood-worktrees/prompt-contract-* start-desktop-worktree
+   ```
+
+   候选 `.env.worktree` 会提供 `DESKTOP_APP_SUFFIX`、`DESKTOP_RENDERER_PORT`、`VITE_API_URL`、`VITE_WS_URL` 和 `VITE_APP_URL`。Electron dev 会使用独立 app 名和 userData，不会抢当前控制平面的桌面端窗口。
+   这个命令也是长进程，应该和候选 server/frontend 分开运行。
 
 4. 在控制平面里创建或选择目标 project。
 
@@ -121,7 +130,8 @@ Skill 选择：
 - **目录隔离**：agent 的工作目录必须是候选 worktree。
 - **端口隔离**：候选实例使用 `.env.worktree` 生成的端口，不使用控制平面端口。
 - **数据库隔离**：候选实例使用独立 `POSTGRES_DB`，共享 postgres 容器可以，不能共享同一个 DB。
-- **daemon profile 隔离**：候选 daemon 使用候选 server URL 对应的 profile，不复用控制平面的 active profile。
+- **桌面端隔离**：候选 desktop 使用独立 `DESKTOP_APP_SUFFIX` / `DESKTOP_RENDERER_PORT`，不复用控制平面 Electron userData 或单实例锁。
+- **daemon profile 隔离**：候选 daemon 使用候选 server URL 对应的 `desktop-localhost-{port}` profile，不复用控制平面的 active profile。
 - **project resource 隔离**：控制平面里的 project `local_directory` 指向候选 worktree。
 
 ## 需要人配合的地方
@@ -135,8 +145,7 @@ Skill 选择：
 候选实例失败时，只停候选实例：
 
 ```bash
-cd ../dev-agent-harness-prompt-contract-*
-make stop-worktree
+make -C .dogfood-worktrees/prompt-contract-* stop-worktree
 ```
 
 不要为了修候选实例去停止控制平面。
@@ -144,7 +153,7 @@ make stop-worktree
 如果要丢弃候选 worktree：
 
 ```bash
-git worktree remove ../dev-agent-harness-prompt-contract-*
+git worktree remove .dogfood-worktrees/prompt-contract-* --force
 git branch --list 'codex/dogfood-prompt-contract-*'
 git branch -D <branch-from-list>
 ```

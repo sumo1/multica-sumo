@@ -46,8 +46,8 @@ if [ -z "$slug" ]; then
 fi
 
 branch="${BRANCH:-codex/dogfood-${slug}-${timestamp}}"
-worktree_root="${WORKTREE_ROOT:-$(dirname "$repo_root")}"
-target_dir="${DOGFOOD_WORKTREE_DIR:-${worktree_root}/dev-agent-harness-${slug}-${timestamp}}"
+worktree_root="${WORKTREE_ROOT:-${repo_root}/.dogfood-worktrees}"
+target_dir="${DOGFOOD_WORKTREE_DIR:-${worktree_root}/${slug}-${timestamp}}"
 
 if [ "${ALLOW_DIRTY:-0}" != "1" ] && [ -n "$(git -C "$repo_root" status --porcelain)" ]; then
   echo "Refusing to create a dogfood worktree from a dirty control checkout."
@@ -64,6 +64,8 @@ if [ -e "$target_dir" ]; then
   echo "Refusing to overwrite existing path: ${target_dir}"
   exit 1
 fi
+
+mkdir -p "$worktree_root"
 
 echo "==> Creating candidate worktree"
 echo "    control:   ${repo_root}"
@@ -87,9 +89,12 @@ Candidate worktree is ready.
 
 Use it as the target workspace, not as the control plane:
 
-  cd "${target_dir}"
-  make setup-worktree
-  make start-worktree
+  make -C "${target_dir}" setup-worktree
+  make -C "${target_dir}" start-worktree
+
+For isolated desktop E2E, start a separate candidate desktop:
+
+  make -C "${target_dir}" start-desktop-worktree
 
 Then attach this path as the project local_directory in the stable control plane:
 

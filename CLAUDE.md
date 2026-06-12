@@ -177,6 +177,7 @@ All checkouts share one PostgreSQL container. Isolation is at the database level
 make worktree-env       # Generate .env.worktree with unique DB/ports
 make setup-worktree     # Setup using .env.worktree
 make start-worktree     # Start using .env.worktree
+make start-desktop-worktree # Start isolated desktop using .env.worktree
 ```
 
 ### Self-dogfooding Safety
@@ -188,15 +189,18 @@ then create an isolated candidate target:
 
 ```bash
 make dogfood-worktree TASK=prompt-contract
-cd ../dev-agent-harness-prompt-contract-*
-make setup-worktree
-make start-worktree
+make -C .dogfood-worktrees/prompt-contract-* setup-worktree
+make -C .dogfood-worktrees/prompt-contract-* start-worktree
+make -C .dogfood-worktrees/prompt-contract-* start-desktop-worktree
 ```
 
 Attach the candidate worktree path as the project `local_directory` in the
 control plane. Agents may edit, start, stop, and test only the candidate
-worktree. Merging back to `main`, force pushing, or restarting the control
-plane requires explicit user approval. See `docs/step-self-dogfooding/`.
+worktree. Candidate desktop E2E must use the worktree's `.env.worktree`
+(`DESKTOP_APP_SUFFIX`, `DESKTOP_RENDERER_PORT`, and candidate API URLs) so it
+does not reuse the control-plane Electron userData, single-instance lock, ports,
+or daemon profile. Merging back to `main`, force pushing, or restarting the
+control plane requires explicit user approval. See `docs/step-self-dogfooding/`.
 
 ## Coding Rules
 

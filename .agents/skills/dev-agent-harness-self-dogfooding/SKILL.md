@@ -57,15 +57,25 @@ that edit through the harness.
    This derives the branch/worktree slug from the requirement directory and
    prints the doc path for the goal prompt.
 
+   By default the candidate lives under `.dogfood-worktrees/{task}-{timestamp}`.
    The command prints the candidate path, branch, generated DB name, and ports.
 
 3. Move into the candidate worktree.
 
    ```bash
-   cd <candidate_worktree_path>
-   make setup-worktree
-   make start-worktree
+   make -C <candidate_worktree_path> setup-worktree
+   make -C <candidate_worktree_path> start-worktree
    ```
+
+   For desktop E2E, start the candidate desktop separately:
+
+   ```bash
+   make -C <candidate_worktree_path> start-desktop-worktree
+   ```
+
+   The candidate desktop uses `.env.worktree` values for `DESKTOP_APP_SUFFIX`,
+   `DESKTOP_RENDERER_PORT`, `VITE_API_URL`, `VITE_WS_URL`, and `VITE_APP_URL`, so
+   it gets an isolated Electron userData path and talks to the candidate backend.
 
 4. In the stable control plane UI, attach the candidate path as the project
    `local_directory`.
@@ -87,10 +97,11 @@ that edit through the harness.
 ```bash
 make dogfood-worktree TASK=<slug>   # run in stable control checkout
 make dogfood-worktree TASK_DOC=docs/task/<task-id>
-make setup-worktree                 # run in candidate worktree
-make start-worktree                 # run in candidate worktree
-make stop-worktree                  # run in candidate worktree
-make check-worktree                 # run in candidate worktree when full verification is warranted
+make -C <candidate> setup-worktree
+make -C <candidate> start-worktree
+make -C <candidate> start-desktop-worktree
+make -C <candidate> stop-worktree
+make -C <candidate> check-worktree
 ```
 
 ## References

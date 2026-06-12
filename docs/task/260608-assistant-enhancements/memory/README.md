@@ -40,6 +40,9 @@
 
 ## repo-SSOT 任务环节（框架翻转，06-11）
 
+> **本段会话脉络（06-11，按时序）**：先落地 design-repo-ssot 的后端（goal_persist 一键持久化 + goal_decision 下一步判断）→ 补设计 ③（契约=工程方言、讨论态总控引导）→ 实机 dogfood 暴露一串真 bug，逐个修：① 上游产出没传给下游（节点重新推导）② 节点 spec 暴露 seq 拓扑 ③ 所有子任务派给同一 agent（roster 只有 leader）④ roster 没带角色描述（总控按名字猜）⑤ 停止按钮空操作 ⑥ 助理页详情不能滚动 ⑦ 不该主动排队。**贯穿的设计哲学**：让总控（有全局视野）做调度判断，别让系统闷头排队、别让末端模型瞎决策；平台是 harness 工程的适配/投影。**实机教训**：目标端是桌面端不是浏览器（[[desktop-is-the-target-end]]）；起 server 要连 `multica` 库 + curl 加 `--noproxy`（[[restart-server-correct-db-and-proxy]]）；改 prompt 必须 rebundle 重启 daemon。
+
+- [node-spec-topology-internal](2026-06-11-node-spec-topology-internal.md) — **节点 spec 不暴露拓扑**：禁止 seq1/seq2/节点号/上下游指代，用语义化输入名；上游产出靠 depends_on→upstream_output 传，synthesis 节点要同时 depends_on producer+verifier 别把源材料藏在 verifier 后
 - [roster-carries-role-descriptions](2026-06-11-roster-carries-role-descriptions.md) — **修"总控选角色很奇怪"**：规划 roster 原来只给角色名+UUID，总控只能按名字猜专长。现在每行带截断的 description（首段~200字），prompt 让它"读描述按专长选"。纯增量不改选择逻辑
 - [no-proactive-queueing-dispatch-direct](2026-06-11-no-proactive-queueing-dispatch-direct.md) — **不主动排队**：删 ClaimTask 的 per-agent max_concurrent_tasks 准入闸，任务直接派；runtime 真扛不住时真实错误经 FailTask 冒上来打印。保留 per-issue 串行（正确性）+ daemon semaphore（机器底线）
 - [planning-roster-widened-to-workspace-pool](2026-06-11-planning-roster-widened-to-workspace-pool.md) — **修"所有子任务都派给同一 agent"**：动态 squad 常只有 leader→规划 roster 只看到自己。新增 `buildPlanningRoster` 扩出全工作区可用 agent 池（dispatch 本就不要求 squad 成员）；绑工程时 `ProjectRoleNames` 标注 repo harness 角色优先。不强制分派

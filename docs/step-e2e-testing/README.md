@@ -17,7 +17,19 @@
 
 ## 启动顺序
 
-1. 确认桌面端 dev 环境。常见入口是 `pnpm dev:desktop`，它负责 Electron + electron-vite HMR。
+1. 先确认验证目标。
+
+   - 普通本机验证：常见入口是 `pnpm dev:desktop`，它负责 Electron + electron-vite HMR。
+   - 自举候选 worktree：不要直接跑 `pnpm dev:desktop`，使用候选隔离入口。
+
+   ```bash
+   make -C <candidate-worktree> setup-worktree
+   make -C <candidate-worktree> start-worktree
+   make -C <candidate-worktree> start-desktop-worktree
+   ```
+
+   `start-worktree` 和 `start-desktop-worktree` 都是长进程，放在候选任务自己的终端/session 中运行。桌面入口会读取候选 `.env.worktree`，把桌面端绑定到候选 `DESKTOP_APP_SUFFIX`、`DESKTOP_RENDERER_PORT`、`VITE_API_URL`、`VITE_WS_URL` 和 `VITE_APP_URL`。结果是候选 Electron 有独立 app 名、userData 和单实例锁，并且只连候选 backend，不会影响当前控制平面的桌面端。
+
 2. 重建并启动 server。实机数据在 `multica` 数据库，不是仓库 `.env` 里的空 `local_medeo`。
 
    ```bash
@@ -36,6 +48,8 @@
    ```bash
    apps/desktop/resources/bin/multica daemon start --foreground --profile desktop-localhost-8080
    ```
+
+   自举候选 worktree 不手写控制面 profile。候选 `.env.worktree` 会给出候选 backend 对应的 `DESKTOP_DAEMON_PROFILE`，桌面端也会从候选 API URL 派生自己的 daemon profile。
 
 5. 健康检查必须绕过代理。
 

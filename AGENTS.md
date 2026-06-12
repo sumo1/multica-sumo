@@ -6,6 +6,22 @@ This file provides guidance to AI agents when working with code in this reposito
 > All authoritative architecture, coding rules, commands, and conventions
 > live in **CLAUDE.md** at the project root. Read that file first.
 
+## Task-start Skill Selection
+
+At the start of a new task, check repo-local Skills before planning or editing.
+Use frontmatter only for selection; read the full Skill body only when its
+description matches the task.
+
+```bash
+make agent-skills
+```
+
+If a Skill applies, read its `SKILL.md` and follow it. If multiple Skills apply,
+use the smallest set that covers the task. For self-dogfooding this repository,
+load `.agents/skills/dev-agent-harness-self-dogfooding/SKILL.md`; never run
+implementation or verification against the checkout that is currently
+dispatching tasks.
+
 ## Quick Reference
 
 ### Architecture

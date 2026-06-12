@@ -435,6 +435,7 @@ flowchart TD
 - `docs/step-e2e-testing/`：端到端验证经验
 - `docs/step-self-dogfooding/`：用当前 harness 改造当前工程的隔离流程
 - `scripts/create-dogfood-worktree.sh`：创建候选 worktree 和 `.env.worktree`
+- `.agents/skills/dev-agent-harness-self-dogfooding/` / `make agent-skills`：模型可发现的自举改造 Skill
 
 ## 一句话
 

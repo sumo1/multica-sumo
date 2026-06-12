@@ -17,6 +17,20 @@ stable control plane        candidate target workspace
 
 ## 标准流程
 
+0. 先做 Skill 选择。
+
+   ```bash
+   make agent-skills
+   ```
+
+   只用 Skill frontmatter 做选择；如果当前任务匹配 `dev-agent-harness-self-dogfooding`，先读：
+
+   ```text
+   .agents/skills/dev-agent-harness-self-dogfooding/SKILL.md
+   ```
+
+   Skill 负责触发和流程，脚本负责确定性执行，本文档负责解释背景和案例。
+
 1. 先保证控制平面稳定运行。
 
    控制平面通常是主 checkout，使用 `.env` 和固定端口。这个实例只负责调度，不作为目标工程。
@@ -62,6 +76,10 @@ stable control plane        candidate target workspace
 
 ```text
 目标：在当前 project 绑定的候选 worktree 中实现 [具体需求]。
+
+Skill 选择：
+- 开始前运行 `make agent-skills`。
+- 如果任务匹配 `dev-agent-harness-self-dogfooding`，先读对应 `SKILL.md`，再执行脚本。
 
 边界：
 - 只能修改 project local_directory 指向的候选 worktree。
@@ -127,3 +145,4 @@ git branch -D <branch-from-list>
 - 启动候选 server / daemon / desktop：先读 [`../step-e2e-testing/`](../step-e2e-testing/)。
 - 同步候选工程角色：先读 [`../step-project-role-sync/`](../step-project-role-sync/)。
 - 沉淀任务结果：先读 [`../step-repo-docs-persistence/`](../step-repo-docs-persistence/)。
+- 查 repo-local Skill：运行 `make agent-skills`。

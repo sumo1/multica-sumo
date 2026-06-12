@@ -1,4 +1,4 @@
-.PHONY: help makehelp dev server daemon cli multica build test migrate-up migrate-down sqlc seed clean setup start stop check worktree-env dogfood-worktree setup-main start-main stop-main check-main setup-worktree start-worktree stop-worktree check-worktree db-up db-down db-reset selfhost selfhost-build selfhost-stop
+.PHONY: help makehelp dev server daemon cli multica build test migrate-up migrate-down sqlc seed clean setup start stop check worktree-env dogfood-worktree agent-skills setup-main start-main stop-main check-main setup-worktree start-worktree stop-worktree check-worktree db-up db-down db-reset selfhost selfhost-build selfhost-stop
 
 MAIN_ENV_FILE ?= .env
 WORKTREE_ENV_FILE ?= .env.worktree
@@ -225,6 +225,14 @@ worktree-env: ## Generate .env.worktree with a unique DB name and app ports for 
 
 dogfood-worktree: ## Create an isolated candidate worktree for self-dogfooding; pass TASK=name
 	@TASK="$(TASK)" BASE_REF="$(BASE_REF)" BRANCH="$(BRANCH)" WORKTREE_ROOT="$(WORKTREE_ROOT)" DOGFOOD_WORKTREE_DIR="$(DOGFOOD_WORKTREE_DIR)" bash scripts/create-dogfood-worktree.sh
+
+agent-skills: ## Print repo-local Skill names, descriptions, and files for task-start selection
+	@for file in .agents/skills/*/SKILL.md; do \
+		[ -f "$$file" ] || continue; \
+		name=$$(awk -F': ' '/^name:/ {print $$2; exit}' "$$file"); \
+		desc=$$(awk -F': ' '/^description:/ {print substr($$0, index($$0,$$2)); exit}' "$$file"); \
+		printf "%s\n  file: %s\n  description: %s\n\n" "$$name" "$$file" "$$desc"; \
+	done
 
 setup-main: ## Prepare the main checkout using .env
 	@$(MAKE) setup ENV_FILE=$(MAIN_ENV_FILE)

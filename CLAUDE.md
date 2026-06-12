@@ -17,6 +17,21 @@ Read that page before:
 
 The legacy `packages/views/locales/glossary.md` is now a stub redirecting to the docs page; do not rely on it.
 
+## Repo-local Skills
+
+At the start of a new task, check repo-local Skills before planning or editing.
+Use the frontmatter `name` and `description` for selection, then read the full
+`SKILL.md` only for matching Skills.
+
+```bash
+make agent-skills
+```
+
+For self-dogfooding this repository, load
+`.agents/skills/dev-agent-harness-self-dogfooding/SKILL.md`. Its job is to keep
+the active control plane separate from the candidate worktree. Scripts remain in
+`scripts/`; Skills decide when and how to use them.
+
 ## Project Context
 
 Multica is an AI-native task management platform — like Linear, but with AI agents as first-class citizens.

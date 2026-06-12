@@ -84,6 +84,8 @@ repo 文件读写必须由 agent 在 daemon 所在机器执行。
 
 入口见 `docs/step-self-dogfooding/` 和 `make dogfood-worktree TASK=...`。
 
+需要让模型稳定发现流程时，优先做成 repo-local Skill，并保证 `make agent-skills` 能打印出触发描述。Skill 负责“何时使用”，脚本负责“如何确定执行”，不要只把命令藏在长文档里。
+
 ### 子任务 prompt 不暴露 DAG
 
 执行节点不要看到：
